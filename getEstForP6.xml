@@ -1,0 +1,303 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<!DOCTYPE Envelope [
+  <!ELEMENT Envelope (Header,Body)>
+  <!ELEMENT Header EMPTY>
+  <!ELEMENT Body (method)>
+  <!ELEMENT method (estimate?)>
+  <!ATTLIST method  estimateNumber CDATA #REQUIRED  name NMTOKEN #FIXED "getEstimate">
+  <!ELEMENT estimate (client?,architect?,qs?,bills?,sections?,resources?,units?,trades?,subcontractors?,accountCodes?,costCodes?)>
+  <!-- dateTendered format: yyyy-mm-dd -->
+  <!-- 1 <= contractPeriod <= 999999999 -->
+  <!-- retention: formatted to user's Money Format setting -->
+  <!ATTLIST estimate  estimateNumber CDATA #REQUIRED  suffix CDATA #IMPLIED  title CDATA #REQUIRED  dateTendered NMTOKEN #IMPLIED  siteName CDATA #IMPLIED  siteAddress CDATA #IMPLIED  sitePostcode CDATA #IMPLIED  conditions CDATA #IMPLIED  contractType CDATA #IMPLIED  contractPeriod NMTOKEN #IMPLIED  damages CDATA #IMPLIED  defectLiabilityPeriod CDATA #IMPLIED  retention CDATA #IMPLIED  performanceBond CDATA #IMPLIED  interimCertificatesPeriod CDATA #IMPLIED  honouringPeriod CDATA #IMPLIED  comments CDATA #IMPLIED>
+  <!ELEMENT client (address?,contacts?)>
+  <!ATTLIST client  company CDATA #IMPLIED  reference CDATA #IMPLIED  phone CDATA #IMPLIED  fax CDATA #IMPLIED>
+  <!ELEMENT address EMPTY>
+  <!ATTLIST address  address1 CDATA #IMPLIED  address2 CDATA #IMPLIED  address3 CDATA #IMPLIED  address4 CDATA #IMPLIED  county CDATA #IMPLIED  postCode CDATA #IMPLIED>
+  <!ELEMENT contacts (contact+)>
+  <!ELEMENT contact EMPTY>
+  <!-- position applies only to SC contact -->
+  <!ATTLIST contact  name CDATA #IMPLIED  phone CDATA #IMPLIED  fax CDATA #IMPLIED  email CDATA #IMPLIED  position CDATA #IMPLIED  mobile CDATA #IMPLIED>
+  <!ELEMENT architect EMPTY>
+  <!ATTLIST architect  name CDATA #IMPLIED  phone CDATA #IMPLIED>
+  <!ELEMENT qs EMPTY>
+  <!ATTLIST qs  name CDATA #IMPLIED  phone CDATA #IMPLIED>
+  <!ELEMENT bills (bill+)>
+  <!ELEMENT bill (pages?)>
+  <!--  1<=billMultiplier<=9999 -->
+  <!ATTLIST bill  billNumber CDATA #REQUIRED  suffix CDATA #IMPLIED  title CDATA #IMPLIED  billMultiplier NMTOKEN "1">
+  <!ELEMENT pages (page+)>
+  <!ELEMENT page (items?)>
+  <!ATTLIST page  pageNumber CDATA #REQUIRED  suffix CDATA #IMPLIED  title CDATA #IMPLIED>
+  <!ELEMENT items (item+)>
+  <!ELEMENT item (resourceBuildup? | items?)>
+  <!-- reference: applies only to priced items -->
+  <!-- quantity: applies only to priced items; formatted to user's Quantity Format setting -->
+  <!-- included and includedText: applies only to priced, included items -->
+  <!-- units: applies only to priced, non-included items (more info in units section) -->
+  <!-- rate, prelimsAdjust,itemProfit, globalProfit, globalAdjust, MCD:  -->
+  <!--   applies only to priced, non-included items; formatted to user's Money Format setting -->
+  <!-- scheduleCode: applies only to priced items -->
+  <!-- compositeItem: applies only to priced, composite parent items -->
+  <!ATTLIST item  itemID ID #REQUIRED  description CDATA #IMPLIED  type (StandardPriced|Included|PrimeCost|ProvisionalSums|Dayworks|Preliminaries|UnspecifiedPricedItem|Comment|Heading|MajorHeading|SubBill|UnspecifiedTextItem|CollectionPoint|Unknown) #REQUIRED  position NMTOKEN #REQUIRED  reference CDATA #IMPLIED  quantity CDATA #IMPLIED  included (TRUE) #IMPLIED  includedText CDATA #IMPLIED  units CDATA #IMPLIED  rate CDATA #IMPLIED  prelimsAdjust CDATA #IMPLIED  itemProfit CDATA #IMPLIED  globalProfit CDATA #IMPLIED  globalAdjust CDATA #IMPLIED  MCD CDATA #IMPLIED  scheduleCode CDATA #IMPLIED  compositeItem (TRUE) #IMPLIED  itemLink IDREF #IMPLIED  refSubSectionID IDREF #IMPLIED  notes CDATA #IMPLIED>
+  <!ELEMENT resourceBuildup (buildup+)>
+  <!ELEMENT buildup EMPTY>
+  <!-- comment  will only have a description attribute -->
+  <!-- quantity and waste percentage apply to global resources -->
+  <!-- non-global resources have an implied quantity=1 and waste=0 -->
+  <!-- quantity attribute is calculated using constant, multipliers, dividers -->
+  <!-- quantity, wastePCnt, constant, multipliers, dividers are all formatted to user's Quantity Format setting -->
+  <!-- rate: applies to non-global resource; formatted to user's Money Format setting -->
+  <!-- units: for non-global, non-SC resources; overwrites default in referenced resource -->
+  <!-- discountPCnt, markupPCnt, profitPCnt, tradingPCnt, nominated apply to non-global SC resource-->
+  <!-- discountPCnt, markupPCnt, profitPCnt, tradingPCnt are formatted to user's Money Format setting -->
+  <!ATTLIST buildup  description CDATA #IMPLIED  position NMTOKEN #REQUIRED  refResourceID IDREF #IMPLIED  refSubcontractorID IDREF #IMPLIED  quantity CDATA #IMPLIED  wastePCnt CDATA #IMPLIED  constant CDATA #IMPLIED  multiplier1 CDATA #IMPLIED  multiplier2 CDATA #IMPLIED  multiplier3 CDATA #IMPLIED  divider1 CDATA #IMPLIED  divider2 CDATA #IMPLIED  divider3 CDATA #IMPLIED  rate CDATA #IMPLIED  units CDATA #IMPLIED  discountPCnt CDATA #IMPLIED  markupPCnt CDATA #IMPLIED  profitPCnt CDATA #IMPLIED  tradingPCnt CDATA #IMPLIED  nominated (TRUE) #IMPLIED  includedInQuote (TRUE) #IMPLIED>
+  <!ELEMENT sections (section+)>
+  <!ELEMENT section (subSections?)>
+  <!ATTLIST section  code CDATA #REQUIRED  description CDATA #IMPLIED>
+  <!ELEMENT subSections (subSection+)>
+  <!ELEMENT subSection EMPTY>
+  <!ATTLIST subSection  subSectionID ID #REQUIRED  code CDATA #REQUIRED  description CDATA #IMPLIED>
+  <!ELEMENT resources (resource+)>
+  <!-- resourceBuildup element only exists if resource is an activity -->
+  <!ELEMENT resource (resourceBuildup?)>
+  <!-- costCode: more details in costCodes section -->
+  <!-- accountCode: more details in accountCodes section -->
+  <!-- units: for global resource; more details in units section -->
+  <!-- rate: for global resource; formatted to user's Money Format setting -->
+  <!-- discountPCnt, markupPCnt, profitPCnt, tradingPCnt are formatted to user's Money Format setting -->
+  <!ATTLIST resource  resourceID ID #REQUIRED  type (Labour|Plant|Material|Other|Subcontractor|UNKNOWN) #REQUIRED  GlobalRate (FALSE|TRUE) #REQUIRED  resCode CDATA #REQUIRED  costCode CDATA #IMPLIED  accountCode CDATA #IMPLIED  refTradeID IDREF #IMPLIED  description CDATA #IMPLIED  units CDATA #IMPLIED  rate CDATA #IMPLIED  discountPCnt CDATA #IMPLIED  markupPCnt CDATA #IMPLIED  profitPCnt CDATA #IMPLIED  tradingPCnt CDATA #IMPLIED>
+  <!ELEMENT units (unit+)>
+  <!ELEMENT unit EMPTY>
+  <!ATTLIST unit  name CDATA #REQUIRED  dimensions NMTOKEN #REQUIRED  printQty (TRUE|FALSE) #REQUIRED>
+  <!ELEMENT trades (trade+)>
+  <!ELEMENT trade EMPTY>
+  <!ATTLIST trade  tradeID ID #REQUIRED  type (Subcontractor|Supplier|UNKNOWN) #REQUIRED  tradeCode CDATA #IMPLIED  description CDATA #REQUIRED  shortcut CDATA #IMPLIED  refSubcontractorID IDREF #IMPLIED  accountCode CDATA #IMPLIED>
+  <!ELEMENT subcontractors (subcontractor+)>
+  <!ELEMENT subcontractor (address?,contacts?)>
+  <!-- certStarts, certExpires are formatted: yyyy-mm-dd -->
+  <!-- workUpToValue, discountPCnt: formatted to user's Money Format setting -->
+  <!-- qaRating: formatted to user's Quantity Format setting -->
+  <!ATTLIST subcontractor  subcontractorID ID #REQUIRED  type (Subcontractor|Supplier|UNKNOWN) #REQUIRED  subCode CDATA #IMPLIED  company CDATA #IMPLIED  tradingName CDATA #IMPLIED  knownAs CDATA #IMPLIED  phone CDATA #IMPLIED  fax CDATA #IMPLIED  accountNo CDATA #IMPLIED  vatNo CDATA #IMPLIED  vatNat CDATA #IMPLIED  certNo CDATA #IMPLIED  certStarts NMTOKEN #IMPLIED  certExpires NMTOKEN #IMPLIED  certType CDATA #IMPLIED  certHolder CDATA #IMPLIED  comments CDATA #IMPLIED  workUpToValue CDATA #IMPLIED  qaRating CDATA #IMPLIED  enquiriesSent NMTOKEN #IMPLIED  enquiriesRcvd NMTOKEN #IMPLIED  enquiriesSucc NMTOKEN #IMPLIED  discountPCnt CDATA #IMPLIED>
+  <!ELEMENT accountCodes (accountCode+)>
+  <!ELEMENT accountCode EMPTY>
+  <!ATTLIST accountCode  code CDATA #REQUIRED  description CDATA #IMPLIED>
+  <!ELEMENT costCodes (costCode+)>
+  <!ELEMENT costCode EMPTY>
+  <!ATTLIST costCode  code CDATA #REQUIRED  type (Labour|Plant|Material|Other|Subcontractor|UNKNOWN) #REQUIRED  description CDATA #IMPLIED>
+  <!ELEMENT bill (subbills?)>
+  <!ELEMENT subbill (majorheadings?)>
+  <!ELEMENT majorheading (headings?)>
+  <!ELEMENT heading (comments?)>
+  <!ELEMENT comment (items?)>
+]>
+<Envelope>
+  <Header/>
+  <Body>
+    <method estimateNumber="0001 SoS" name="getEstimate">
+      <estimate estimateNumber="0001 SoS" title="School Science Lab with composite" sitePostcode="1" conditions="JCT Local Authorities 1981 with Quantities" contractPeriod="18" damages="Â£2000 per week or part thereof" defectLiabilityPeriod="12 Months" retention="5.00" performanceBond="n/a" interimCertificatesPeriod="Monthly" honouringPeriod="30 Days">
+        <bills>
+          <bill billNumber="1" title="Preliminaries" billMultiplier="1">
+            <subbills>
+              <subbill itemID="ITEM20309" description="Preliminaries" type="SubBill" position="2">
+                <majorheadings>
+                  <majorheading itemID="ITEM20283" description="Bill Nr 2" type="MajorHeading" position="1">
+                    <headings>
+                      <heading itemID="ITEM20285" description="Specification / Peambles" type="Heading" position="3"/>
+                    </headings>
+                  </majorheading>
+                </majorheadings>
+              </subbill>
+            </subbills>
+          </bill>
+          <bill billNumber="2" title="Preambles" billMultiplier="1">
+            <subbills>
+              <subbill itemID="ITEM20284" description="Preambles" type="SubBill" position="2"/>
+            </subbills>
+          </bill>
+          <bill billNumber="3" title="Substructures" billMultiplier="1">
+            <subbills>
+              <subbill itemID="ITEM20317" description="GROUNDWORK" type="SubBill" position="1">
+                <majorheadings>
+                  <majorheading itemID="ITEM20318" description="D20: EXCAVATING AND FILLING" type="MajorHeading" position="2">
+                    <headings>
+                      <heading itemID="ITEM20319" description="Site preparation" type="Heading" position="3"/>
+                      <heading itemID="ITEM20324" description="Machine excavation" type="Heading" position="8"/>
+                      <heading itemID="ITEM20334" description="Off site disposal of material arising from earthworks" type="Heading" position="19"/>
+                      <heading itemID="ITEM20337" description="Breaking up obstructions with machine driven hammer" type="Heading" position="1"/>
+                      <heading itemID="ITEM20343" description="Working space allowance to excavations; by machine" type="Heading" position="7"/>
+                      <heading itemID="ITEM20347" description="Steel trench sheeting to loose ground" type="Heading" position="11"/>
+                      <heading itemID="ITEM20351" description="Filling to excavations with imported materials" type="Heading" position="15"/>
+                    </headings>
+                  </majorheading>
+                </majorheadings>
+              </subbill>
+              <subbill itemID="ITEM20358" description="IN SITU CONCRETE &amp; LARGE PC CONCRETE" type="SubBill" position="1">
+                <majorheadings>
+                  <majorheading itemID="ITEM20359" description="E10: IN SITU CONCRETE" type="MajorHeading" position="2">
+                    <headings>
+                      <heading itemID="ITEM20360" description="Plain in situ concrete; mix C20P" type="Heading" position="3"/>
+                    </headings>
+                  </majorheading>
+                  <majorheading itemID="ITEM20372" description="E20: FORMWORK FOR IN SITU CONCRETE" type="MajorHeading" position="15">
+                    <headings>
+                      <heading itemID="ITEM20373" description="Formwork to general finish" type="Heading" position="16"/>
+                      <heading itemID="ITEM20380" description="Formwork to general finish" type="Heading" position="1"/>
+                    </headings>
+                  </majorheading>
+                </majorheadings>
+              </subbill>
+            </subbills>
+          </bill>
+          <bill billNumber="4" title="Superstructures" billMultiplier="1">
+            <subbills>
+              <subbill itemID="ITEM20387" description="MASONRY" type="SubBill" position="1">
+                <majorheadings>
+                  <majorheading itemID="ITEM20388" description="F10: BRICK AND BLOCK WALLING" type="MajorHeading" position="2">
+                    <headings>
+                      <heading itemID="ITEM20389" description="Walls" type="Heading" position="3"/>
+                      <heading itemID="ITEM20406" description="Extra over general brickwork for fair faced work" type="Heading" position="21"/>
+                    </headings>
+                  </majorheading>
+                  <majorheading itemID="ITEM20409" description="F30: ACCESSORIES AND SUNDRY ITEMS" type="MajorHeading" position="1">
+                    <headings>
+                      <heading itemID="ITEM20410" description="Forming cavities" type="Heading" position="2"/>
+                      <heading itemID="ITEM20415" description="Cavity wall insulation" type="Heading" position="7"/>
+                      <heading itemID="ITEM20418" description="Damp proof courses and cavity trays" type="Heading" position="10"/>
+                      <heading itemID="ITEM20424" description="Expanded metal reinforcement" type="Heading" position="16"/>
+                      <heading itemID="ITEM20428" description="Expansion joints or the like" type="Heading" position="20"/>
+                    </headings>
+                  </majorheading>
+                </majorheadings>
+              </subbill>
+              <subbill itemID="ITEM20434" description="STRUCTURAL AND CARCASSING" type="SubBill" position="1">
+                <majorheadings>
+                  <majorheading itemID="ITEM20435" description="G12: ISOLATED STRUCTURAL METAL MEMBERS" type="MajorHeading" position="2">
+                    <headings>
+                      <heading itemID="ITEM20436" description="Steel lintels; Catnic galvanised polyester powder coated steel lintels built into brick or block walling" type="Heading" position="3"/>
+                    </headings>
+                  </majorheading>
+                  <majorheading itemID="ITEM20446" description="G20: CARPENTRY, TIMBER FRAMING AND FIRST FIXING" type="MajorHeading" position="13">
+                    <headings>
+                      <heading itemID="ITEM20447" description="Floors" type="Heading" position="14"/>
+                      <heading itemID="ITEM20455" description="Plates or the like" type="Heading" position="22"/>
+                      <heading itemID="ITEM20459" description="Pitched roofs" type="Heading" position="1"/>
+                      <heading itemID="ITEM20464" description="Strutting and bridging; treated sawn softwood; grade GS; basic sizes:" type="Heading" position="6"/>
+                    </headings>
+                  </majorheading>
+                </majorheadings>
+              </subbill>
+              <subbill itemID="ITEM20469" description="CLADDING AND COVERING" type="SubBill" position="11">
+                <majorheadings>
+                  <majorheading itemID="ITEM20470" description="H60: CLAY AND CONCRETE ROOF TILING" type="MajorHeading" position="12">
+                    <headings>
+                      <heading itemID="ITEM20471" description="Sloping coverings" type="Heading" position="13"/>
+                      <heading itemID="ITEM20474" description="Vertical coverings" type="Heading" position="16"/>
+                      <heading itemID="ITEM20477" description="Eaves, verges, ridges, hips or the like" type="Heading" position="19"/>
+                    </headings>
+                  </majorheading>
+                </majorheadings>
+              </subbill>
+              <subbill itemID="ITEM20482" description="LININGS, SHEATHING &amp; DRY PARTITIONING" type="SubBill" position="1">
+                <majorheadings>
+                  <majorheading itemID="ITEM20483" description="K10: PLASTERBOARD DRY LINING" type="MajorHeading" position="2">
+                    <headings>
+                      <heading itemID="ITEM20484" description="Gyproc linings; 12.5 mm tapered edge wallboard to woodwork backgrounds; fixing with screws; joints flush filled, taped and finished for direct decoration" type="Heading" position="3"/>
+                      <heading itemID="ITEM20489" description="Dry-lining beads, stops, edgings and arches" type="Heading" position="8"/>
+                    </headings>
+                  </majorheading>
+                  <majorheading itemID="ITEM20493" description="K40: SUSPENDED CEILINGS" type="MajorHeading" position="12">
+                    <headings>
+                      <heading itemID="ITEM20623" description="Armstrong concealed grid suspended ceilings; factory finished &quot;lay-in-grid&quot; tiles" type="Heading" position="13"/>
+                      <heading itemID="ITEM20499" description="Suspended ceiling grid trims" type="Heading" position="21"/>
+                      <heading itemID="ITEM20494" description="Metal framed suspended ceiling grids" type="Heading" position="16"/>
+                    </headings>
+                  </majorheading>
+                </majorheadings>
+              </subbill>
+              <subbill itemID="ITEM20502" description="WINDOWS, DOORS AND STAIRS" type="SubBill" position="1">
+                <majorheadings>
+                  <majorheading itemID="ITEM20503" description="L10: TIMBER WINDOWS, ROOFLIGHTS, SCREENS AND LOUVRES" type="MajorHeading" position="2">
+                    <headings>
+                      <heading itemID="ITEM20504" description="Standard softwood windows" type="Heading" position="3"/>
+                    </headings>
+                  </majorheading>
+                  <majorheading itemID="ITEM20509" description="L20: TIMBER DOORS, SHUTTERS AND HATCHES" type="MajorHeading" position="8">
+                    <headings>
+                      <heading itemID="ITEM20510" description="Standard softwood exterior doors" type="Heading" position="9"/>
+                      <heading itemID="ITEM20514" description="Interior doors" type="Heading" position="13"/>
+                      <heading itemID="ITEM20519" description="Standard softwood door frames" type="Heading" position="18"/>
+                      <heading itemID="ITEM20524" description="Mastic pointing" type="Heading" position="23"/>
+                    </headings>
+                  </majorheading>
+                  <majorheading itemID="ITEM20527" description="L40: GENERAL GLAZING" type="MajorHeading" position="1">
+                    <headings>
+                      <heading itemID="ITEM20528" description="Plain glazing" type="Heading" position="2"/>
+                      <heading itemID="ITEM20544" description="Special glazing" type="Heading" position="18"/>
+                    </headings>
+                  </majorheading>
+                </majorheadings>
+              </subbill>
+              <subbill itemID="ITEM20550" description="SURFACE FINISHES" type="SubBill" position="1">
+                <majorheadings>
+                  <majorheading itemID="ITEM20551" description="M10: SAND CEMENT, CONCRETE AND GRANOLITHIC SCREEDS AND FLOORING" type="MajorHeading" position="2">
+                    <headings>
+                      <heading itemID="ITEM20552" description="Cement and sand (1:3); trowelled finish" type="Heading" position="3"/>
+                      <heading itemID="ITEM20555" description="Granolithic paving (two parts cement to five parts dustless granite chippings); trowelled finish" type="Heading" position="6"/>
+                    </headings>
+                  </majorheading>
+                  <majorheading itemID="ITEM20560" description="M60: PAINTING AND CLEAR FINISHING" type="MajorHeading" position="11">
+                    <headings>
+                      <heading itemID="ITEM20561" description="Emulsion paint" type="Heading" position="12"/>
+                      <heading itemID="ITEM20566" description="Masonry paint" type="Heading" position="1"/>
+                      <heading itemID="ITEM20570" description="Oil paint; woodwork backgrounds; two undercoats, one top coat" type="Heading" position="5"/>
+                      <heading itemID="ITEM20573" description="Intumescent fire protection; woodwork backgrounds" type="Heading" position="8"/>
+                    </headings>
+                  </majorheading>
+                </majorheadings>
+              </subbill>
+            </subbills>
+          </bill>
+          <bill billNumber="5" title="External Works &amp; Drainage" billMultiplier="1">
+            <subbills>
+              <subbill itemID="ITEM20578" description="DISPOSAL SYSTEMS" type="SubBill" position="1">
+                <majorheadings>
+                  <majorheading itemID="ITEM20579" description="R12: DRAINAGE BELOW GROUND" type="MajorHeading" position="2">
+                    <headings>
+                      <heading itemID="ITEM20580" description="Excavation of trenches; by machine; for drainage pipes or the like, including disposal and filling" type="Heading" position="3"/>
+                      <heading itemID="ITEM20588" description="Breaking up obstructions with machine driven hammer" type="Heading" position="11"/>
+                      <heading itemID="ITEM20593" description="Beds and coverings for drainage pipes" type="Heading" position="16"/>
+                      <heading itemID="ITEM20598" description="Drainage pipes" type="Heading" position="21"/>
+                    </headings>
+                  </majorheading>
+                </majorheadings>
+              </subbill>
+              <subbill itemID="ITEM20602" description="APPROXIMATE ESTIMATING RATES" type="SubBill" position="1">
+                <majorheadings>
+                  <majorheading itemID="ITEM20603" description="EXTERNAL WORKS" type="MajorHeading" position="2">
+                    <headings>
+                      <heading itemID="ITEM20604" description="Driveway construction; complete" type="Heading" position="3"/>
+                      <heading itemID="ITEM20609" description="Patio and paving construction; complete" type="Heading" position="8"/>
+                      <heading itemID="ITEM20612" description="Landscaping" type="Heading" position="11"/>
+                      <heading itemID="ITEM20615" description="Fencing" type="Heading" position="14"/>
+                    </headings>
+                    <headings>
+                      <heading itemID="ITEM20311" description="Prime Cost Sums" type="Heading" position="2"/>
+                      <heading itemID="ITEM20297" description="Provisional Sums" type="Heading" position="12"/>
+                      <heading itemID="ITEM20312" description="Dayworks" type="Heading" position="1"/>
+                    </headings>
+                  </majorheading>
+                </majorheadings>
+              </subbill>
+            </subbills>
+          </bill>
+          <bill billNumber="6" title="Prime Cost, Provisional Sums &amp; Dayworks" billMultiplier="1">
+            <subbills>
+              <subbill itemID="ITEM20287" description="Prime Cost &amp; Provisional Sums" type="SubBill" position="1"/>
+            </subbills>
+          </bill>
+        </bills>
+      </estimate>
+    </method>
+  </Body>
+</Envelope>
